@@ -1,8 +1,11 @@
 # WeatherApp 🌟
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/binaryshrey/dice/android_build.yml)
+[![ktlint](https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg)](https://ktlint.github.io/)
 
 ## Overview 🚀
+ 
 
 Welcome to the WeatherApp repository! This Android project is a showcase of cutting-edge technologies and a demonstration of elegant UI design using Jetpack Compose.
 
@@ -24,7 +27,7 @@ Welcome to the WeatherApp repository! This Android project is a showcase of cutt
 
 ## Connect with Me 🌐
 
-Let's connect! Feel free to reach out on LinkedIn, Twitter, or GitHub.
+Let's connect! Feel free to reach out on LinkedIn.
 
 LinkedIn: https://www.linkedin.com/in/abualgait/
 
