@@ -1,3 +1,6 @@
+![Weather App Image](https://github.com/abualgait/CleanArchitectureWeatherApp/assets/38107393/4aaa9b02-e955-4299-9829-690a26f481fc)
+
+
 # WeatherApp 🌟
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
