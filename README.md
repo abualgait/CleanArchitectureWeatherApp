@@ -1,5 +1,5 @@
 
-![Weather App Image](https://github.com/abualgait/CleanArchitectureWeatherApp/assets/38107393/4aaa9b02-e955-4299-9829-690a26f481fc)
+![WeatherApp](https://github.com/abualgait/CleanArchitectureWeatherApp/assets/38107393/7db5a37b-864d-42f4-aec4-6405edb397bc)
 
 # WeatherApp 🌟
 
