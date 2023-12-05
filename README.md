@@ -1,4 +1,5 @@
 
+![Weather App Image](https://github.com/abualgait/CleanArchitectureWeatherApp/assets/38107393/4aaa9b02-e955-4299-9829-690a26f481fc)
 
 # WeatherApp 🌟
 
@@ -10,8 +11,6 @@
  
 
 Welcome to the WeatherApp repository! This Android project is a showcase of cutting-edge technologies and a demonstration of elegant UI design using Jetpack Compose.
-
-![Weather App Image](https://github.com/abualgait/CleanArchitectureWeatherApp/assets/38107393/4aaa9b02-e955-4299-9829-690a26f481fc)
 
 ## Features ✨
 
