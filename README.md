@@ -1,21 +1,31 @@
+# WeatherApp 🌟
 
-# 🚀 Clean Architecture App Starter 🌐
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Jumpstart your app development journey with this GitHub repository that follows clean architecture principles. Powered by Jetpack Compose,
-it seamlessly integrates use cases, repositories, Retrofit for network requests, Room for local storage, and a flexible theming system. This starter provides a modular and scalable foundation for your Android app. Happy coding! 🚀👩‍💻👨‍💻
+## Overview 🚀
 
-![image](https://github.com/abualgait/AppStarter/assets/38107393/696b1ef5-bd17-4848-81e8-7c8ef71da6c8)
+Welcome to the WeatherApp repository! This Android project is a showcase of cutting-edge technologies and a demonstration of elegant UI design using Jetpack Compose.
 
+## Features ✨
 
+- **Clean Architecture:** The project follows a clean and modular architecture, making it easy to understand and extend.
 
-#### Built using:
-- Kotlin
-- MVVM Clean Architecture
-- Compose UI
-- Retrofit2 & OkHttp3
-- Room Database
-- Hilt DI
-- Use cases
-- Unit Testing
-- Kotlin Flow
-- Compose State
+- **Kotlin:** Written entirely in Kotlin, taking advantage of its conciseness and expressiveness.
+
+- **Coroutines & Flow:** Leverage the power of Kotlin Coroutines and Flow for asynchronous programming.
+
+- **Room Database:** Persist data with Room, providing a robust and efficient local database solution.
+
+- **Moshi:** Utilize Moshi for efficient JSON parsing, ensuring seamless communication with APIs.
+
+- **Dark/Light Theme:** Enjoy a seamless user experience with the option to switch between dark and light themes.
+
+- **Splash API Integration:** Connect to a Splash API to dynamically load and display stunning images.
+
+## Connect with Me 🌐
+
+Let's connect! Feel free to reach out on LinkedIn, Twitter, or GitHub.
+
+LinkedIn: https://www.linkedin.com/in/abualgait/
+
+Happy coding! 🚀✨
