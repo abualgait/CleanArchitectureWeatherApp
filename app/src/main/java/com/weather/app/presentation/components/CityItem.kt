@@ -46,7 +46,6 @@ fun CityItem(city: City, onClick: (City) -> Unit) {
             contentDescription = null,
             modifier = Modifier
                 .size(24.dp)
-                .padding(10.dp)
         )
     }
 }

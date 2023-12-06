@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.weather.app.data.data_source.local.WeatherDataStore
 import com.weather.app.domain.use_case.AppUseCases
 import com.weather.app.util.ConnectivityManager
-import com.weather.app.util.DialogQueue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,8 +23,6 @@ class HomeScreenViewModel @Inject constructor(
     private val connectivityManager: ConnectivityManager,
     private val dataStore: WeatherDataStore
 ) : ViewModel() {
-
-    val dialogQueue = DialogQueue()
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()

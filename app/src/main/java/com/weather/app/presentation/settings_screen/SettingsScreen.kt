@@ -32,8 +32,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,10 +41,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.weather.app.domain.model.City
 import com.weather.app.presentation.components.CityItem
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 
+@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 @Composable
 fun SettingsScreen(
     navController: NavController,
@@ -53,7 +61,6 @@ fun SettingsScreen(
 
     val state = viewModel.state.value
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
     var query by remember { mutableStateOf("") }
 
     LaunchedEffect(key1 = true) {
@@ -66,6 +73,18 @@ fun SettingsScreen(
                 }
             }
         }
+    }
+
+    LaunchedEffect(key1 = query) {
+        snapshotFlow { query }
+            .debounce(300)
+            .filter { it.length >= 3 }
+            .distinctUntilChanged()
+            .map {
+                viewModel.onEvent(SettingsScreenEvent.CitiesSearchResults(it))
+            }
+            .flowOn(Dispatchers.Default)
+            .collect()
     }
 
     Scaffold(
@@ -96,13 +115,6 @@ fun SettingsScreen(
                     value = query,
                     onValueChange = { value ->
                         query = value
-                        scope.launch {
-                            delay(300) // debounce time
-                            if (value == query && value.length > 3) {
-                                viewModel.onEvent(SettingsScreenEvent.CitiesSearchResults(query))
-
-                            }
-                        }
                     },
                     placeholder = { Text("Search for cities") },
                     modifier = Modifier

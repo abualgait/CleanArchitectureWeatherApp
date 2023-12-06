@@ -98,10 +98,7 @@ fun HomeScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) {
 
-        if (loading)
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = "Loading ...")
-            }
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -130,7 +127,6 @@ fun HomeScreen(
                     CustomSwitch(
                         checked = isDarkTheme,
                         onCheckedChange = { darkTheme ->
-                            viewModel.isDarkTheme.value = darkTheme
                             viewModel.switchTheme(darkTheme)
                         },
                         modifier = Modifier
@@ -148,14 +144,17 @@ fun HomeScreen(
 
 
             item {
-                (state.data.firstOrNull()?.let { weatherData ->
-                    WeatherCard(weatherData)
-                } ?: NoWeatherCard(viewModel))
-
+                if (state.data.isNotEmpty()) {
+                    WeatherCard(state.data.first())
+                } else {
+                    NoDataFound(viewModel, "No current conditions found")
+                }
             }
-            if (state.hourlyForecasts.isNotEmpty()) {
-                item {
+            item {
+                if (state.hourlyForecasts.isNotEmpty()) {
                     HourlyForecasts(state)
+                } else {
+                    NoDataFound(viewModel, "No hourly forecasts found")
                 }
             }
             if (state.dailyForecasts.isNotEmpty()) {
@@ -171,6 +170,17 @@ fun HomeScreen(
 
                     }
                 }
+            } else {
+                item {
+                    NoDataFound(viewModel, "No daily forecasts found")
+                }
+            }
+
+        }
+
+        if (loading) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "Loading ...")
             }
 
         }
@@ -333,7 +343,7 @@ fun WeatherCard(weatherData: WeatherData) {
 
 
 @Composable
-fun NoWeatherCard(viewModel: HomeScreenViewModel) {
+fun NoDataFound(viewModel: HomeScreenViewModel, title: String = "") {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -342,7 +352,7 @@ fun NoWeatherCard(viewModel: HomeScreenViewModel) {
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = "No data found",
+                text = title,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -350,9 +360,12 @@ fun NoWeatherCard(viewModel: HomeScreenViewModel) {
             Icon(
                 imageVector = Icons.Default.Refresh,
                 contentDescription = "Refresh",
-                tint = MaterialTheme.colorScheme.onBackground, modifier = Modifier.clickable {
-                    viewModel.getAll()
-                }
+                tint = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier
+                    .padding(10.dp)
+                    .clickable {
+                        viewModel.getAll()
+                    }
             )
         }
 
