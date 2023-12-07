@@ -35,12 +35,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.weather.app.domain.model.City
 import com.weather.app.presentation.components.CityItem
+import com.weather.app.testtags.TestTags
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -93,9 +95,11 @@ fun SettingsScreen(
                 .padding(10.dp)
                 .clickable {
                     navController.popBackStack()
-                })
+                }
+                .testTag(TestTags.IconBack)
+            )
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState, modifier = Modifier.testTag(TestTags.SnackBar)) }
     ) {
         Box(modifier = Modifier.padding(it)) {
             Column(
@@ -119,7 +123,8 @@ fun SettingsScreen(
                     placeholder = { Text("Search for cities") },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 16.dp),
+                        .padding(bottom = 16.dp)
+                        .testTag(TestTags.SearchField),
                     trailingIcon = {
                         if (query.isNotEmpty()) {
                             Icon(
@@ -127,7 +132,7 @@ fun SettingsScreen(
                                 contentDescription = null,
                                 modifier = Modifier.clickable {
                                     query = ""
-                                }
+                                }.testTag(TestTags.ClearIcon)
                             )
                         }
                     }
@@ -167,7 +172,7 @@ private fun RecentChips(
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(16.dp).testTag(TestTags.RecentLocationsText)
         )
     FlowRow(
         modifier = Modifier.padding(2.dp),

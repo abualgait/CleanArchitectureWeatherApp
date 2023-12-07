@@ -47,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,6 +66,7 @@ import com.weather.app.extension.toFormattedTimeString
 import com.weather.app.presentation.components.DailyForecastItem
 import com.weather.app.presentation.components.HourlyForecastItem
 import com.weather.app.presentation.settings_screen.navigation.SettingsScreenDestination
+import com.weather.app.testtags.TestTags
 import com.weather.app.theme.AppTheme
 import kotlinx.coroutines.flow.collectLatest
 
@@ -95,7 +97,7 @@ fun HomeScreen(
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState, modifier = Modifier.testTag(TestTags.SnackBar)) }
     ) {
 
 
@@ -134,11 +136,11 @@ fun HomeScreen(
                             .height(40.dp)
                             .width(70.dp)
                             .clip(RoundedCornerShape(200.dp))
-                            .background(brush = brush)
+                            .background(brush = brush).testTag(TestTags.CustomSwitch)
                     )
                     Icon(Icons.Filled.Search, "Search", modifier = Modifier.clickable {
                         navController.navigate(SettingsScreenDestination.route)
-                    })
+                    }.testTag(TestTags.IconSearch))
                 }
             }
 
@@ -225,6 +227,7 @@ fun CustomSwitch(
                 modifier = Modifier
                     .size(30.dp)
                     .offset(x = offsetX)
+                    .testTag(TestTags.DarkModeImageTag)
             )
         } else {
             Image(
@@ -233,6 +236,7 @@ fun CustomSwitch(
                 modifier = Modifier
                     .size(30.dp)
                     .offset(x = offsetX)
+                    .testTag(TestTags.LightModeImageTag)
             )
         }
     }
@@ -347,7 +351,7 @@ fun NoDataFound(viewModel: HomeScreenViewModel, title: String = "") {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp).testTag(TestTags.NoDataFound),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -365,7 +369,7 @@ fun NoDataFound(viewModel: HomeScreenViewModel, title: String = "") {
                     .padding(10.dp)
                     .clickable {
                         viewModel.getAll()
-                    }
+                    }.testTag(TestTags.Reload + title)
             )
         }
 
