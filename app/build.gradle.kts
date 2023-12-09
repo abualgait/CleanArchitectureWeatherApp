@@ -137,6 +137,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.0-beta02")
     testImplementation("com.squareup.okhttp3:mockwebserver:${okHttp}")
     testImplementation("com.squareup.okhttp3:okhttp:${okHttp}")
+    testImplementation("io.mockk:mockk:1.13.8")
 
     // Instrumentation tests
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.48.1")
