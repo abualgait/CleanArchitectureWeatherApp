@@ -138,6 +138,8 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:${okHttp}")
     testImplementation("com.squareup.okhttp3:okhttp:${okHttp}")
     testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("androidx.test.ext:junit:1.1.5")
+    testImplementation ("app.cash.turbine:turbine:1.0.0")
 
     // Instrumentation tests
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.48.1")
