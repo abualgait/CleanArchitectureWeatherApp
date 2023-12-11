@@ -4,8 +4,13 @@ import com.weather.app.data.data_source.remote.response.DailyForecastData
 import com.weather.app.data.data_source.remote.response.HourlyForecastData
 import com.weather.app.data.data_source.remote.response.WeatherData
 
-data class HomeScreenState(
-    val data: List<WeatherData> = emptyList(),
-    val hourlyForecasts: List<HourlyForecastData> = emptyList(),
-    val dailyForecasts: List<DailyForecastData> = emptyList(),
-)
+sealed class HomeScreenState {
+    data object Loading : HomeScreenState()
+    sealed class Success : HomeScreenState() {
+        data class Weather(val data: List<WeatherData>) : Success()
+        data class Hourly(val hourlyForecasts: List<HourlyForecastData>) : Success()
+        data class Daily(val dailyForecasts: List<DailyForecastData>) : Success()
+    }
+
+    data class Error(val error: Throwable) : HomeScreenState()
+}

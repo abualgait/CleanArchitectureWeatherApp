@@ -160,16 +160,20 @@ class HomeScreenViewModelTest {
         }
 
         //Then
-        assertThat(homeScreenViewModel.loading.value).isEqualTo(
-            false
-        )
         assertThat(homeScreenViewModel.state.value).isEqualTo(
-            HomeScreenState(
-                data = listOf(
-                    sampleWeatherData
+            HomeScreenState.Loading
+        )
+        homeScreenViewModel.state.test {
+            val item = awaitItem()
+            assertThat(item).isEqualTo(
+                HomeScreenState.Success.Weather(
+                    data = listOf(
+                        sampleWeatherData
+                    )
                 )
             )
-        )
+        }
+
     }
 
 
@@ -196,9 +200,6 @@ class HomeScreenViewModelTest {
             }
 
             //Then
-            assertThat(homeScreenViewModel.loading.value).isEqualTo(
-                false
-            )
             val item = awaitItem()
             assertThat(item).isEqualTo(
                 HomeScreenViewModel.UiEvent.ShowSnackbar("error")

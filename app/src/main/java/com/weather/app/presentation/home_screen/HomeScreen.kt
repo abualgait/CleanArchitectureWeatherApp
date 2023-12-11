@@ -38,6 +38,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -77,8 +78,7 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeScreenViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.value
-    val loading = viewModel.loading.value
+    val state by viewModel.state.collectAsState()
     val isDarkTheme = viewModel.isDarkTheme.value
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -97,95 +97,121 @@ fun HomeScreen(
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState, modifier = Modifier.testTag(TestTags.SnackBar)) }
+        snackbarHost = {
+            SnackbarHost(
+                snackbarHostState,
+                modifier = Modifier.testTag(TestTags.SnackBar)
+            )
+        }
     ) {
 
+        when (state) {
+            is HomeScreenState.Loading -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = "Loading ...")
+                }
+            }
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            item {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(10.dp)
+            is HomeScreenState.Error -> {
+
+            }
+
+            else -> {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
                 ) {
-                    Icon(Icons.Filled.LocationOn, "LocationOn")
-                    Spacer(modifier = Modifier.width(5.dp))
-                    Text(
-                        text = viewModel.currentCityKey.value.split("-")[0],
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Spacer(modifier = Modifier.width(5.dp))
-                    Icon(Icons.Filled.ArrowDropDown, "ArrowDropDown")
-                    Spacer(modifier = Modifier.weight(1f))
+                    item {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(10.dp)
+                        ) {
+                            Icon(Icons.Filled.LocationOn, "LocationOn")
+                            Spacer(modifier = Modifier.width(5.dp))
+                            Text(
+                                text = viewModel.currentCityKey.value.split("-")[0],
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Spacer(modifier = Modifier.width(5.dp))
+                            Icon(Icons.Filled.ArrowDropDown, "ArrowDropDown")
+                            Spacer(modifier = Modifier.weight(1f))
 
-                    val brush = Brush.verticalGradient(
-                        colors = listOf(
-                            if (!isDarkTheme) Color(0xFF87CEEB) else Color(0xBA191970),
-                            if (!isDarkTheme) Color(0xFF5EC1E9) else Color(0xE8000033)
-                        )
-                    )
-                    CustomSwitch(
-                        checked = isDarkTheme,
-                        onCheckedChange = { darkTheme ->
-                            viewModel.switchTheme(darkTheme)
-                        },
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .height(40.dp)
-                            .width(70.dp)
-                            .clip(RoundedCornerShape(200.dp))
-                            .background(brush = brush).testTag(TestTags.CustomSwitch)
-                    )
-                    Icon(Icons.Filled.Search, "Search", modifier = Modifier.clickable {
-                        navController.navigate(SettingsScreenDestination.route)
-                    }.testTag(TestTags.IconSearch))
-                }
-            }
+                            val brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    if (!isDarkTheme) Color(0xFF87CEEB) else Color(0xBA191970),
+                                    if (!isDarkTheme) Color(0xFF5EC1E9) else Color(0xE8000033)
+                                )
+                            )
+                            CustomSwitch(
+                                checked = isDarkTheme,
+                                onCheckedChange = { darkTheme ->
+                                    viewModel.switchTheme(darkTheme)
+                                },
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .height(40.dp)
+                                    .width(70.dp)
+                                    .clip(RoundedCornerShape(200.dp))
+                                    .background(brush = brush)
+                                    .testTag(TestTags.CustomSwitch)
+                            )
+                            Icon(Icons.Filled.Search, "Search", modifier = Modifier
+                                .clickable {
+                                    navController.navigate(SettingsScreenDestination.route)
+                                }
+                                .testTag(TestTags.IconSearch))
+                        }
+                    }
 
 
-            item {
-                if (state.data.isNotEmpty()) {
-                    WeatherCard(state.data.first())
-                } else {
-                    NoDataFound(viewModel, "No current conditions found")
-                }
-            }
-            item {
-                if (state.hourlyForecasts.isNotEmpty()) {
-                    HourlyForecasts(state)
-                } else {
-                    NoDataFound(viewModel, "No hourly forecasts found")
-                }
-            }
-            if (state.dailyForecasts.isNotEmpty()) {
-                item {
-                    Text(
-                        modifier = Modifier.padding(16.dp),
-                        text = "Daily Forecasts",
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                }
-                items(state.dailyForecasts) { item: DailyForecastData ->
-                    DailyForecastItem(item) {
+                    item {
+                        if (state is HomeScreenState.Success.Weather) {
+                            val weatherState = (state as HomeScreenState.Success.Weather)
+                            if (weatherState.data.isNotEmpty()) {
+                                WeatherCard(weatherState.data.first())
+                            } else {
+                                NoDataFound(viewModel, "No current conditions found")
+                            }
 
+                        }
+                    }
+
+                    item {
+                        if (state is HomeScreenState.Success.Hourly) {
+                            val hourly = (state as HomeScreenState.Success.Hourly)
+                            if (hourly.hourlyForecasts.isNotEmpty()) {
+                                HourlyForecasts(hourly.hourlyForecasts)
+                            } else {
+                                NoDataFound(viewModel, "No hourly forecasts found")
+                            }
+
+                        }
+                    }
+                    if (state is HomeScreenState.Success.Daily) {
+                        val daily = (state as HomeScreenState.Success.Daily)
+                        if (daily.dailyForecasts.isNotEmpty()) {
+                            item {
+                                Text(
+                                    modifier = Modifier.padding(16.dp),
+                                    text = "Daily Forecasts",
+                                    style = MaterialTheme.typography.titleLarge
+                                )
+                            }
+                            items(daily.dailyForecasts) { item: DailyForecastData ->
+                                DailyForecastItem(item) {
+
+                                }
+                            }
+                        } else {
+                            item {
+                                NoDataFound(viewModel, "No daily forecasts found")
+                            }
+                        }
                     }
                 }
-            } else {
-                item {
-                    NoDataFound(viewModel, "No daily forecasts found")
-                }
             }
-
         }
 
-        if (loading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = "Loading ...")
-            }
-
-        }
     }
 
 }
@@ -243,12 +269,12 @@ fun CustomSwitch(
 }
 
 @Composable
-private fun HourlyForecasts(state: HomeScreenState) {
+private fun HourlyForecasts(hourlyForecastData: List<HourlyForecastData>) {
     Column(modifier = Modifier.padding(start = 16.dp, top = 10.dp)) {
         Text(text = "Hourly Forecasts", style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(5.dp))
         LazyRow {
-            items(state.hourlyForecasts) { hourlyForecast ->
+            items(hourlyForecastData) { hourlyForecast ->
                 HourlyForecastItem(hourlyForecast) {
 
                 }
@@ -351,7 +377,8 @@ fun NoDataFound(viewModel: HomeScreenViewModel, title: String = "") {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp).testTag(TestTags.NoDataFound),
+            .padding(16.dp)
+            .testTag(TestTags.NoDataFound),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -369,7 +396,8 @@ fun NoDataFound(viewModel: HomeScreenViewModel, title: String = "") {
                     .padding(10.dp)
                     .clickable {
                         viewModel.getAll()
-                    }.testTag(TestTags.Reload + title)
+                    }
+                    .testTag(TestTags.Reload + title)
             )
         }
 
@@ -456,7 +484,7 @@ fun HourlyForecastsPreview() {
             )
         )
 
-        HourlyForecasts(state = HomeScreenState(hourlyForecasts = hourlyForecastList))
+        HourlyForecasts(hourlyForecastList)
     }
 
 }
