@@ -12,5 +12,5 @@ sealed class HomeScreenState {
         data class Daily(val dailyForecasts: List<DailyForecastData>) : Success()
     }
 
-    data class Error(val error: Throwable) : HomeScreenState()
+    data class Error(val error: String) : HomeScreenState()
 }

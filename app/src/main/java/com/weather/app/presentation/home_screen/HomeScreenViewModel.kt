@@ -99,6 +99,7 @@ class HomeScreenViewModel @Inject constructor(
                     }
                 }
                 if (data.error != null) {
+                    _state.value = HomeScreenState.Error(data.error)
                     _eventFlow.emit(
                         UiEvent.ShowSnackbar(
                             message = data.error
@@ -128,6 +129,7 @@ class HomeScreenViewModel @Inject constructor(
                     }
                 }
                 if (data.error != null) {
+                    _state.value = HomeScreenState.Error(data.error)
                     _eventFlow.emit(
                         UiEvent.ShowSnackbar(
                             message = data.error
@@ -156,6 +158,7 @@ class HomeScreenViewModel @Inject constructor(
                     }
                 }
                 if (data.error != null) {
+                    _state.value = HomeScreenState.Error(data.error)
                     _eventFlow.emit(
                         UiEvent.ShowSnackbar(
                             message = data.error

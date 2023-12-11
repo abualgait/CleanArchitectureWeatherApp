@@ -1,6 +1,5 @@
 package com.weather.app.presentation.settings_screen.navigation
 
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.weather.app.navigation.AppNavigationDestination
@@ -11,12 +10,9 @@ object SettingsScreenDestination : AppNavigationDestination {
     override val destination = "settings_screen_destination"
 }
 
-fun NavGraphBuilder.settingsScreen(navController: NavController) {
-    composable(
-        route = SettingsScreenDestination.route
-    ) {
-        SettingsScreen(
-            navController = navController,
-        )
+
+fun NavGraphBuilder.settingsScreen(navigateToDetails: () -> Unit) {
+    composable(route = SettingsScreenDestination.route) {
+        SettingsScreen(navigateToDetails)
     }
 }

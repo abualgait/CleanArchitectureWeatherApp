@@ -66,7 +66,7 @@ import com.weather.app.extension.toFormattedDateString
 import com.weather.app.extension.toFormattedTimeString
 import com.weather.app.presentation.components.DailyForecastItem
 import com.weather.app.presentation.components.HourlyForecastItem
-import com.weather.app.presentation.settings_screen.navigation.SettingsScreenDestination
+import com.weather.app.presentation.search_screen.navigation.SearchScreenDestination
 import com.weather.app.testtags.TestTags
 import com.weather.app.theme.AppTheme
 import kotlinx.coroutines.flow.collectLatest
@@ -113,7 +113,9 @@ fun HomeScreen(
             }
 
             is HomeScreenState.Error -> {
-
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = "An error has been occurred")
+                }
             }
 
             else -> {
@@ -157,7 +159,7 @@ fun HomeScreen(
                             )
                             Icon(Icons.Filled.Search, "Search", modifier = Modifier
                                 .clickable {
-                                    navController.navigate(SettingsScreenDestination.route)
+                                    navController.navigate(SearchScreenDestination.route)
                                 }
                                 .testTag(TestTags.IconSearch))
                         }

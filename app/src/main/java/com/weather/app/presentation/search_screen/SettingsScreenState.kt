@@ -1,4 +1,4 @@
-package com.weather.app.presentation.settings_screen
+package com.weather.app.presentation.search_screen
 
 import com.weather.app.domain.model.City
 
