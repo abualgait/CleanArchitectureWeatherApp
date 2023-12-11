@@ -5,8 +5,6 @@ import androidx.room.Room
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.weather.app.data.data_source.local.AppDatabase
-import com.weather.app.data.data_source.local.CityEntityMapper
-import com.weather.app.data.data_source.remote.CityDtoMapper
 import com.weather.app.data.data_source.remote.RetrofitService
 import com.weather.app.data.repository.AppRepositoryImpl
 import com.weather.app.domain.repository.AppRepository
@@ -64,10 +62,8 @@ object TestAppModule {
     @Singleton
     fun provideAppRepository(
         db: AppDatabase, retrofitService: RetrofitService,
-        dtoMapper: CityDtoMapper,
-        entityMapper: CityEntityMapper,
     ): AppRepository {
-        return AppRepositoryImpl(db.appDao, retrofitService, dtoMapper, entityMapper)
+        return AppRepositoryImpl(db.appDao, retrofitService)
     }
 
     @Provides
@@ -83,14 +79,5 @@ object TestAppModule {
             dailyForecasts = GetDailyForecasts(repository)
         )
     }
-
-    @Provides
-    @Singleton
-    fun provideCityDtoMapper() = CityDtoMapper()
-
-
-    @Provides
-    @Singleton
-    fun provideCityEntityMapper() = CityEntityMapper()
 
 }

@@ -2,7 +2,7 @@ package com.weather.app.app_feature.domain.use_case
 
 import com.google.common.truth.Truth.assertThat
 import com.weather.app.app_feature.data.repository.FakeWeatherAppRepository
-import com.weather.app.data.data_source.local.CityEntityMapper
+import com.weather.app.data.data_source.local.mapFromDomainModel
 import com.weather.app.data.repository.AppRepositoryImpl
 import com.weather.app.domain.model.City
 import com.weather.app.domain.use_case.AddCityOffline
@@ -54,7 +54,6 @@ class AddCityOfflineTest {
     @Test
     fun mockkAddCityOffline_ReturnSuccess() = runBlocking {
 
-        val entityMapper = CityEntityMapper()
         val city =
             City(id = "1", localizedName = "Cairo", country = "Egypt", administrativeArea = "CA")
 
@@ -63,9 +62,7 @@ class AddCityOfflineTest {
 
         coEvery { mockRepository.getCities() } returns flowOf(
             listOf(
-                entityMapper.mapFromDomainModel(
-                    city
-                )
+                city.mapFromDomainModel()
             )
         )
 

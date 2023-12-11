@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.weather.app.data.data_source.local.CityEntityMapper
 import com.weather.app.data.data_source.local.WeatherDataStore
+import com.weather.app.data.data_source.local.fromEntityList
 import com.weather.app.domain.use_case.AppUseCases
 import com.weather.app.util.ConnectivityManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +23,6 @@ import javax.inject.Inject
 class SettingsScreenViewModel @Inject constructor(
     private val appUseCases: AppUseCases,
     private val connectivityManager: ConnectivityManager,
-    private val entityMapper: CityEntityMapper,
     private val dataStore: WeatherDataStore,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -77,7 +76,7 @@ class SettingsScreenViewModel @Inject constructor(
                     appUseCases.getCities.invoke().collect {
                         withContext(Dispatchers.Main) {
                             _state.value = state.value.copy(
-                                selectedCities = entityMapper.fromEntityList(it)
+                                selectedCities = it.fromEntityList()
                             )
                         }
                     }

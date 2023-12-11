@@ -1,9 +1,9 @@
 package com.weather.app.app_feature.data.repository
 
 import com.weather.app.data.data_source.local.CityEntity
-import com.weather.app.data.data_source.local.CityEntityMapper
-import com.weather.app.data.data_source.remote.CityDtoMapper
+import com.weather.app.data.data_source.local.toEntityList
 import com.weather.app.data.data_source.remote.RetrofitService
+import com.weather.app.data.data_source.remote.fromEntityList
 import com.weather.app.data.data_source.remote.response.DailyForecastData
 import com.weather.app.data.data_source.remote.response.HourlyForecastData
 import com.weather.app.data.data_source.remote.response.WeatherData
@@ -16,8 +16,6 @@ import kotlinx.coroutines.flow.flowOf
 
 class FakeWeatherAppRepository(
     private val retrofitService: RetrofitService? = null,
-    private val dtoMapper: CityDtoMapper = CityDtoMapper(),
-    private val entityMapper: CityEntityMapper = CityEntityMapper(),
 ) : AppRepository {
 
     private val citie = mutableListOf<City>()
@@ -27,7 +25,7 @@ class FakeWeatherAppRepository(
         try {
             emit(DataState.loading())
             val response = retrofitService?.autoCompleteSearch(q = query)
-            emit(DataState.success(dtoMapper.fromEntityList(response!!)))
+            emit(DataState.success(response?.fromEntityList()!!))
         } catch (e: Exception) {
             emit(DataState.error(e.message ?: "Unknown error"))
         }
@@ -43,7 +41,7 @@ class FakeWeatherAppRepository(
     }
 
     override suspend fun getCities(): Flow<List<CityEntity>> {
-        return flowOf(entityMapper.toEntityList(citie))
+        return flowOf(citie.toEntityList())
     }
 
     override suspend fun getCurrentConditions(locationId: String): Flow<DataState<List<WeatherData>>> =
