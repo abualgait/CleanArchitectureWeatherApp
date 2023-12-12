@@ -58,17 +58,18 @@ import kotlinx.coroutines.flow.map
 @Composable
 fun SearchScreen(
     navController: NavController,
-    viewModel: SettingsScreenViewModel = hiltViewModel()
+    viewModel: SearchScreenViewModel = hiltViewModel(),
+    q: String?
 ) {
 
     val state = viewModel.state.value
     val snackbarHostState = remember { SnackbarHostState() }
-    var query by remember { mutableStateOf("") }
+    var query by remember { mutableStateOf(q ?: "") }
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
-                is SettingsScreenViewModel.UiEvent.ShowSnackbar -> {
+                is SearchScreenViewModel.UiEvent.ShowSnackbar -> {
                     snackbarHostState.showSnackbar(
                         message = event.message
                     )
@@ -83,7 +84,7 @@ fun SearchScreen(
             .filter { it.length >= 3 }
             .distinctUntilChanged()
             .map {
-                viewModel.onEvent(SettingsScreenEvent.CitiesSearchResults(it))
+                viewModel.onEvent(SearchScreenEvent.CitiesSearchResults(it))
             }
             .flowOn(Dispatchers.Default)
             .collect()
@@ -151,7 +152,7 @@ fun SearchScreen(
                     LazyColumn {
                         items(state.data) { cityData ->
                             CityItem(city = cityData) { city ->
-                                viewModel.onEvent(SettingsScreenEvent.CitySelection(city))
+                                viewModel.onEvent(SearchScreenEvent.CitySelection(city))
                                 query = ""
                             }
                         }
@@ -169,8 +170,8 @@ fun SearchScreen(
 @Composable
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 private fun RecentChips(
-    state: SettingsScreenState,
-    viewModel: SettingsScreenViewModel
+    state: SearchScreenState,
+    viewModel: SearchScreenViewModel
 ) {
     if (state.selectedCities.isNotEmpty())
         Text(
@@ -192,14 +193,14 @@ private fun RecentChips(
                     Icon(
                         Icons.Default.Clear,
                         contentDescription = "", modifier = Modifier.clickable {
-                            viewModel.onEvent(SettingsScreenEvent.DeleteCity(city))
+                            viewModel.onEvent(SearchScreenEvent.DeleteCity(city))
                         }
                     )
                 },
                 shape = RoundedCornerShape(200.dp),
                 selected = city.id == viewModel.currentLocationId.value,
                 onClick = {
-                    viewModel.onEvent(SettingsScreenEvent.CitySelection(city))
+                    viewModel.onEvent(SearchScreenEvent.CitySelection(city))
                 },
                 label = {
                     Text(text = city.localizedName)
@@ -215,7 +216,7 @@ fun RecentChipsPreview() {
         City("1", "Cairo", "Egypt", "Cairo"),
         City("2", "Alex", "Egypt", "Alex")
     )
-    val viewModel: SettingsScreenViewModel = hiltViewModel()
-    RecentChips(state = SettingsScreenState(selectedCities = recentCities), viewModel)
+    val viewModel: SearchScreenViewModel = hiltViewModel()
+    RecentChips(state = SearchScreenState(selectedCities = recentCities), viewModel)
 }
 

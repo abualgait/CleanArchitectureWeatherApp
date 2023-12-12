@@ -1,5 +1,6 @@
 package com.weather.app.presentation.navigation
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -34,8 +35,10 @@ import com.weather.app.navigation.TOP_LEVEL_DESTINATIONS
 import com.weather.app.navigation.TopLevelDestination
 import com.weather.app.presentation.home_screen.navigation.HomeScreenDestination
 import com.weather.app.presentation.home_screen.navigation.homeScreen
+import com.weather.app.presentation.search_screen.navigation.SearchScreenDestination
 import com.weather.app.presentation.search_screen.navigation.searchScreen
 import com.weather.app.presentation.settings_screen.navigation.settingsScreen
+import com.weather.app.presentation.weather_animation_screen.navigation.animationScreen
 import com.weather.app.theme.AppTheme
 
 @Composable
@@ -81,10 +84,8 @@ fun MyApp(isNetworkAvailable: Boolean, isDarkTheme: Boolean) {
                 ) {
                     homeScreen(navController = navController)
                     searchScreen(navController = navController)
-
-                    settingsScreen {
-
-                    }
+                    settingsScreen()
+                    animationScreen()
                 }
             }
         }

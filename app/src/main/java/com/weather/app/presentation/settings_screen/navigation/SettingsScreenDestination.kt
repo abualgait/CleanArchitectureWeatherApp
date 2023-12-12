@@ -11,8 +11,8 @@ object SettingsScreenDestination : AppNavigationDestination {
 }
 
 
-fun NavGraphBuilder.settingsScreen(navigateToDetails: () -> Unit) {
+fun NavGraphBuilder.settingsScreen() {
     composable(route = SettingsScreenDestination.route) {
-        SettingsScreen(navigateToDetails)
+        SettingsScreen()
     }
 }

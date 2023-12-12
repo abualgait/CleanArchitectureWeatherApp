@@ -3,14 +3,17 @@ package com.weather.app.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.weather.app.R
 import com.weather.app.presentation.home_screen.navigation.HomeScreenDestination
 import com.weather.app.presentation.settings_screen.navigation.SettingsScreenDestination
+import com.weather.app.presentation.weather_animation_screen.navigation.AnimationScreenDestination
 
 class AppTopLevelNavigation(private val navController: NavHostController) {
 
@@ -44,6 +47,12 @@ val TOP_LEVEL_DESTINATIONS = listOf(
         selectedIcon = Icons.Filled.Home,
         unselectedIcon = Icons.Outlined.Home,
         iconTextId = R.string.home
+    ),
+    TopLevelDestination(
+        route = AnimationScreenDestination.route,
+        selectedIcon = Icons.Filled.Star,
+        unselectedIcon = Icons.Outlined.Star,
+        iconTextId = R.string.animation
     ),
     TopLevelDestination(
         route = SettingsScreenDestination.route,

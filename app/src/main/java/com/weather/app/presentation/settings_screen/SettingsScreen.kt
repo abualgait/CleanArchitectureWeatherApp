@@ -1,7 +1,6 @@
 package com.weather.app.presentation.settings_screen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,7 +19,7 @@ import com.weather.app.BuildConfig
 import com.weather.app.R
 
 @Composable
-fun SettingsScreen(navigateToDetails: () -> Unit) {
+fun SettingsScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -31,10 +30,7 @@ fun SettingsScreen(navigateToDetails: () -> Unit) {
 
         Image(
             painterResource(R.drawable.app_icon),
-            contentDescription = "",
-            modifier = Modifier.clickable {
-                navigateToDetails()
-            }
+            contentDescription = ""
         )
 
 

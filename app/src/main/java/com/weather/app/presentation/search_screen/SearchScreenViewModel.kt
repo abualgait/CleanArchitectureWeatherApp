@@ -20,7 +20,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsScreenViewModel @Inject constructor(
+class SearchScreenViewModel @Inject constructor(
     private val appUseCases: AppUseCases,
     private val connectivityManager: ConnectivityManager,
     private val dataStore: WeatherDataStore,
@@ -28,11 +28,12 @@ class SettingsScreenViewModel @Inject constructor(
 ) : ViewModel() {
 
 
+    val query = savedStateHandle.get<String>("q")
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    private val _state = mutableStateOf(SettingsScreenState())
-    val state: State<SettingsScreenState> = _state
+    private val _state = mutableStateOf(SearchScreenState())
+    val state: State<SearchScreenState> = _state
 
 
     var loading = mutableStateOf(false)
@@ -48,21 +49,21 @@ class SettingsScreenViewModel @Inject constructor(
         viewModelScope.launch {
             dataStore.getCityPrefs().collect {
                 currentLocationId.value = it.split("-")[1]
-                onEvent(SettingsScreenEvent.DisplaySelectedCities)
+                onEvent(SearchScreenEvent.DisplaySelectedCities)
             }
         }
 
     }
 
-    fun onEvent(event: SettingsScreenEvent) {
+    fun onEvent(event: SearchScreenEvent) {
         when (event) {
-            is SettingsScreenEvent.CitiesSearchResults -> {
+            is SearchScreenEvent.CitiesSearchResults -> {
                 viewModelScope.launch {
                     doSearch(event)
                 }
             }
 
-            is SettingsScreenEvent.CitySelection -> {
+            is SearchScreenEvent.CitySelection -> {
                 viewModelScope.launch {
                     withContext(Dispatchers.IO) {
                         appUseCases.addCityOffline(event.city)
@@ -71,7 +72,7 @@ class SettingsScreenViewModel @Inject constructor(
                 }
             }
 
-            SettingsScreenEvent.DisplaySelectedCities -> {
+            SearchScreenEvent.DisplaySelectedCities -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     appUseCases.getCities.invoke().collect {
                         withContext(Dispatchers.Main) {
@@ -84,7 +85,7 @@ class SettingsScreenViewModel @Inject constructor(
 
             }
 
-            is SettingsScreenEvent.DeleteCity -> {
+            is SearchScreenEvent.DeleteCity -> {
                 viewModelScope.launch {
                     appUseCases.deleteCity(event.city)
                 }
@@ -92,7 +93,7 @@ class SettingsScreenViewModel @Inject constructor(
         }
     }
 
-    private suspend fun doSearch(event: SettingsScreenEvent.CitiesSearchResults) {
+    private suspend fun doSearch(event: SearchScreenEvent.CitiesSearchResults) {
         if (!connectivityManager.isNetworkAvailable.value) {
             _eventFlow.emit(
                 UiEvent.ShowSnackbar(
